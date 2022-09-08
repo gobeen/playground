@@ -1,3 +1,3 @@
-module github.com/gobackmap/playground
+module github.com/goplateau/playground
 
 go 1.19
