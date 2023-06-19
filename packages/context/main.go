@@ -20,7 +20,10 @@ func example(w http.ResponseWriter, req *http.Request) {
 	// Simulating some work by the server
 	// Waits 10 seconds and then responds with "example\n"
 	case <-time.After(10 * time.Second):
-		fmt.Fprintf(w, "example\n")
+		_, err := fmt.Fprintf(w, "example\n")
+		if err != nil {
+			return
+		}
 
 	// Handling request cancellation
 	case <-context.Done():
@@ -32,9 +35,10 @@ func example(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-
 	addr := "localhost:5000"
 	http.HandleFunc("/example", example)
 	log.Printf("you can test %s/example\n", addr)
-	http.ListenAndServe(addr, nil)
+	if err := http.ListenAndServe(addr, nil); err != nil {
+		log.Fatal(err)
+	}
 }
